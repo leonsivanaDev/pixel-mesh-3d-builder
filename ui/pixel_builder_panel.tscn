@@ -1,0 +1,926 @@
+[gd_scene load_steps=18 format=3 uid="uid://c6pixelbuilderpanel"]
+
+[ext_resource type="Script" path="res://addons/pixel_mesh_builder/ui/pixel_builder_panel.gd" id="1_panel"]
+[ext_resource type="Script" path="res://addons/pixel_mesh_builder/ui/pixel_canvas.gd" id="2_canvas"]
+[ext_resource type="Script" path="res://addons/pixel_mesh_builder/ui/preview_3d.gd" id="3_preview"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_root"]
+bg_color = Color(0.09, 0.098, 0.118, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_topbar"]
+bg_color = Color(0.125, 0.137, 0.165, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.19, 0.21, 0.25, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.12, 0.13, 0.155, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.18, 0.20, 0.24, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_primary"]
+bg_color = Color(0.145, 0.435, 0.941, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.38, 0.65, 1.0, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_primary_hover"]
+bg_color = Color(0.22, 0.52, 1.0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.78, 1.0, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary"]
+bg_color = Color(0.16, 0.175, 0.21, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25, 0.28, 0.34, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal_backdrop"]
+bg_color = Color(0.05, 0.058, 0.075, 0.78)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal_card"]
+bg_color = Color(0.12, 0.13, 0.165, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.24, 0.28, 0.36, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_banner"]
+bg_color = Color(0.2, 0.16, 0.08, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7, 0.55, 0.15, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="Environment" id="Environment_preview"]
+background_mode = 1
+background_color = Color(0.11, 0.115, 0.135, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.52, 0.54, 0.6, 1)
+ambient_light_energy = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.16, 0.17, 0.2, 0.85)
+roughness = 0.9
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
+material = SubResource("StandardMaterial3D_floor")
+size = Vector2(2.4, 2.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_preview_placeholder"]
+size = Vector3(0.001, 0.001, 0.001)
+
+[node name="PixelBuilderPanel" type="PanelContainer"]
+clip_contents = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_root")
+script = ExtResource("1_panel")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxMain" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TopBar" type="PanelContainer" parent="Margin/VBoxMain"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_topbar")
+
+[node name="TopMargin" type="MarginContainer" parent="Margin/VBoxMain/TopBar"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 4
+
+[node name="TopHBox" type="HBoxContainer" parent="Margin/VBoxMain/TopBar/TopMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ViewBox" type="HBoxContainer" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="GridSizeOpt" type="OptionButton" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/ViewBox"]
+custom_minimum_size = Vector2(85, 30)
+layout_mode = 2
+tooltip_text = "Canvas resolution"
+
+[node name="BtnMirrorX" type="Button" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/ViewBox"]
+custom_minimum_size = Vector2(32, 30)
+layout_mode = 2
+tooltip_text = "Horizontal Symmetry (Mirror X) [Key X]"
+toggle_mode = true
+
+[node name="BtnMirrorY" type="Button" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/ViewBox"]
+custom_minimum_size = Vector2(32, 30)
+layout_mode = 2
+tooltip_text = "Vertical Symmetry (Mirror Y) [Key Y]"
+toggle_mode = true
+
+[node name="BtnGridLines" type="Button" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/ViewBox"]
+custom_minimum_size = Vector2(32, 30)
+layout_mode = 2
+tooltip_text = "Toggle grid lines"
+toggle_mode = true
+button_pressed = true
+
+[node name="BtnDepthNumbers" type="Button" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/ViewBox"]
+custom_minimum_size = Vector2(32, 30)
+layout_mode = 2
+tooltip_text = "Toggle Depth (Z) numbers on canvas"
+toggle_mode = true
+button_pressed = true
+
+[node name="VSep1" type="VSeparator" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox"]
+layout_mode = 2
+
+[node name="DepthBox" type="HBoxContainer" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="LblDepth" type="Label" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/DepthBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.8, 1)
+theme_override_font_sizes/font_size = 12
+text = "Depth Z:"
+
+[node name="DepthBtnsContainer" type="HBoxContainer" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/DepthBox"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="DepthSpin" type="SpinBox" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/DepthBox"]
+custom_minimum_size = Vector2(58, 0)
+layout_mode = 2
+min_value = 1.0
+max_value = 32.0
+value = 1.0
+
+[node name="VSepProject" type="VSeparator" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox"]
+layout_mode = 2
+
+[node name="ProjectBox" type="HBoxContainer" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="LblProject" type="Label" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/ProjectBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.8, 1)
+theme_override_font_sizes/font_size = 12
+text = "Model:"
+
+[node name="ProjectNameEdit" type="LineEdit" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/ProjectBox"]
+custom_minimum_size = Vector2(130, 28)
+layout_mode = 2
+placeholder_text = "untitled"
+text = "untitled"
+tooltip_text = "Model name (saved in assets/pixel_3d/)"
+
+[node name="SaveStatusBadge" type="Label" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/ProjectBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.8, 0.4, 1)
+theme_override_font_sizes/font_size = 14
+text = "●"
+tooltip_text = "Status: Saved"
+
+[node name="BtnNewProject" type="Button" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/ProjectBox"]
+custom_minimum_size = Vector2(32, 28)
+layout_mode = 2
+tooltip_text = "New Model / Blank canvas (Ctrl + N)"
+
+[node name="BtnQuickSave" type="Button" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/ProjectBox"]
+custom_minimum_size = Vector2(32, 28)
+layout_mode = 2
+tooltip_text = "Save Project & 3D Model (Ctrl + S)"
+
+[node name="BtnBrowseProjects" type="Button" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/ProjectBox"]
+custom_minimum_size = Vector2(32, 28)
+layout_mode = 2
+tooltip_text = "My Models (Browse & Load from assets/pixel_3d/source/)"
+
+[node name="BtnQuickExport" type="Button" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/ProjectBox"]
+custom_minimum_size = Vector2(32, 28)
+layout_mode = 2
+tooltip_text = "Export 3D Model (.glb / .tres / .png)..."
+
+[node name="SpacerTop" type="Control" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FileBox" type="HBoxContainer" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="BtnUndo" type="Button" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/FileBox"]
+custom_minimum_size = Vector2(32, 30)
+layout_mode = 2
+tooltip_text = "Undo (Ctrl + Z)"
+
+[node name="BtnRedo" type="Button" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/FileBox"]
+custom_minimum_size = Vector2(32, 30)
+layout_mode = 2
+tooltip_text = "Redo (Ctrl + Y)"
+
+[node name="BtnImport" type="Button" parent="Margin/VBoxMain/TopBar/TopMargin/TopHBox/FileBox"]
+custom_minimum_size = Vector2(32, 30)
+layout_mode = 2
+tooltip_text = "Import PNG Sprite Image"
+
+[node name="RecoveryBanner" type="PanelContainer" parent="Margin/VBoxMain"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_banner")
+
+[node name="BannerMargin" type="MarginContainer" parent="Margin/VBoxMain/RecoveryBanner"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 6
+
+[node name="BannerHBox" type="HBoxContainer" parent="Margin/VBoxMain/RecoveryBanner/BannerMargin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LblRecovery" type="Label" parent="Margin/VBoxMain/RecoveryBanner/BannerMargin/BannerHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 12
+text = "⚠️ Previous unsaved session found. Do you want to restore it?"
+
+[node name="BtnRestoreSession" type="Button" parent="Margin/VBoxMain/RecoveryBanner/BannerMargin/BannerHBox"]
+custom_minimum_size = Vector2(90, 26)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+text = "Restore"
+
+[node name="BtnDiscardSession" type="Button" parent="Margin/VBoxMain/RecoveryBanner/BannerMargin/BannerHBox"]
+custom_minimum_size = Vector2(80, 26)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Discard"
+
+[node name="BodySplit" type="HSplitContainer" parent="Margin/VBoxMain"]
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 580
+
+[node name="LeftCard" type="PanelContainer" parent="Margin/VBoxMain/BodySplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="HBoxCanvas" type="HBoxContainer" parent="Margin/VBoxMain/BodySplit/LeftCard"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ToolRail" type="VBoxContainer" parent="Margin/VBoxMain/BodySplit/LeftCard/HBoxCanvas"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="MarginRail" type="MarginContainer" parent="Margin/VBoxMain/BodySplit/LeftCard/HBoxCanvas/ToolRail"]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 6
+
+[node name="VBoxTools" type="VBoxContainer" parent="Margin/VBoxMain/BodySplit/LeftCard/HBoxCanvas/ToolRail/MarginRail"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="BtnPencil" type="Button" parent="Margin/VBoxMain/BodySplit/LeftCard/HBoxCanvas/ToolRail/MarginRail/VBoxTools"]
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+tooltip_text = "Pencil (P / B)"
+
+[node name="BtnBucket" type="Button" parent="Margin/VBoxMain/BodySplit/LeftCard/HBoxCanvas/ToolRail/MarginRail/VBoxTools"]
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+tooltip_text = "Paint Bucket / Fill (G)"
+
+[node name="BtnLine" type="Button" parent="Margin/VBoxMain/BodySplit/LeftCard/HBoxCanvas/ToolRail/MarginRail/VBoxTools"]
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+tooltip_text = "Straight Line (L)"
+
+[node name="BtnRect" type="Button" parent="Margin/VBoxMain/BodySplit/LeftCard/HBoxCanvas/ToolRail/MarginRail/VBoxTools"]
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+tooltip_text = "Rectangle / Box (R)"
+
+[node name="BtnCircle" type="Button" parent="Margin/VBoxMain/BodySplit/LeftCard/HBoxCanvas/ToolRail/MarginRail/VBoxTools"]
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+tooltip_text = "Circle / Ellipse (C)"
+
+[node name="BtnEraser" type="Button" parent="Margin/VBoxMain/BodySplit/LeftCard/HBoxCanvas/ToolRail/MarginRail/VBoxTools"]
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+tooltip_text = "Eraser (E / Right Click)"
+
+[node name="BtnPicker" type="Button" parent="Margin/VBoxMain/BodySplit/LeftCard/HBoxCanvas/ToolRail/MarginRail/VBoxTools"]
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+tooltip_text = "Color Picker (I)"
+
+[node name="CanvasContainer" type="MarginContainer" parent="Margin/VBoxMain/BodySplit/LeftCard/HBoxCanvas"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="PixelCanvas" type="Control" parent="Margin/VBoxMain/BodySplit/LeftCard/HBoxCanvas/CanvasContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_canvas")
+
+[node name="ToastNotification" type="Label" parent="Margin/VBoxMain/BodySplit/LeftCard/HBoxCanvas/CanvasContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0.85, 1, 0.85, 1)
+theme_override_font_sizes/font_size = 12
+text = "✓ Saved successfully"
+horizontal_alignment = 1
+
+[node name="RightScroll" type="ScrollContainer" parent="Margin/VBoxMain/BodySplit"]
+custom_minimum_size = Vector2(310, 0)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="RightVBox" type="VBoxContainer" parent="Margin/VBoxMain/BodySplit/RightScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="PreviewCard" type="PanelContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Header" type="HBoxContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="MarginH" type="MarginContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 2
+
+[node name="HBox" type="HBoxContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox/Header/MarginH"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox/Header/MarginH/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 1)
+theme_override_font_sizes/font_size = 11
+text = "3D VIEW"
+
+[node name="BtnCamMode" type="Button" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox/Header"]
+custom_minimum_size = Vector2(28, 26)
+layout_mode = 2
+tooltip_text = "Toggle Orthogonal / Perspective camera"
+
+[node name="BtnAutoRotate" type="Button" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox/Header"]
+custom_minimum_size = Vector2(28, 26)
+layout_mode = 2
+tooltip_text = "Continuous Auto-Rotation"
+toggle_mode = true
+
+[node name="BtnResetCam" type="Button" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox/Header"]
+custom_minimum_size = Vector2(28, 26)
+layout_mode = 2
+tooltip_text = "Reset camera"
+
+[node name="PreviewContainer" type="SubViewportContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox"]
+clip_contents = true
+custom_minimum_size = Vector2(0, 240)
+layout_mode = 2
+size_flags_horizontal = 3
+stretch = true
+script = ExtResource("3_preview")
+
+[node name="SubViewport" type="SubViewport" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox/PreviewContainer"]
+own_world_3d = true
+handle_input_locally = false
+size = Vector2i(300, 240)
+render_target_update_mode = 3
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox/PreviewContainer/SubViewport"]
+environment = SubResource("Environment_preview")
+
+[node name="CameraPivot" type="Node3D" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox/PreviewContainer/SubViewport"]
+transform = Transform3D(0.819152, 0.242404, -0.519837, 0, 0.906308, 0.422618, 0.573576, -0.346187, 0.742404, 0, 0.4, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox/PreviewContainer/SubViewport/CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8)
+projection = 1
+size = 2.6
+
+[node name="DirLight" type="DirectionalLight3D" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox/PreviewContainer/SubViewport"]
+transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 3, 5, 4)
+light_color = Color(1, 0.98, 0.94, 1)
+light_energy = 1.1
+
+[node name="FillLight" type="DirectionalLight3D" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox/PreviewContainer/SubViewport"]
+transform = Transform3D(-0.707107, 0.353553, -0.612372, 0, 0.866025, 0.5, 0.707107, 0.353553, -0.612372, -3, 3, -3)
+light_color = Color(0.7, 0.8, 0.95, 1)
+light_energy = 0.5
+
+[node name="GridFloor" type="MeshInstance3D" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox/PreviewContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, 0)
+mesh = SubResource("PlaneMesh_floor")
+
+[node name="PreviewMesh" type="MeshInstance3D" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox/PreviewContainer/SubViewport"]
+mesh = SubResource("BoxMesh_preview_placeholder")
+
+[node name="LblStats" type="Label" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PreviewCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.6, 0.7, 1)
+theme_override_font_sizes/font_size = 11
+text = "0 px | 0 vóxeles | Z máx: 0"
+horizontal_alignment = 1
+
+[node name="PaletteCard" type="PanelContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="PaletteVBox" type="VBoxContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PaletteCard"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="MarginP" type="MarginContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PaletteCard/PaletteVBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="InnerVBox" type="VBoxContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PaletteCard/PaletteVBox/MarginP"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PaletteHeader" type="HBoxContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PaletteCard/PaletteVBox/MarginP/InnerVBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PaletteCard/PaletteVBox/MarginP/InnerVBox/PaletteHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 1)
+theme_override_font_sizes/font_size = 11
+text = "COLOR PALETTE"
+
+[node name="PalettePresetsOpt" type="OptionButton" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PaletteCard/PaletteVBox/MarginP/InnerVBox/PaletteHeader"]
+custom_minimum_size = Vector2(120, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+tooltip_text = "Collection of retro and modern palettes"
+
+[node name="ColorRow" type="HBoxContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PaletteCard/PaletteVBox/MarginP/InnerVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PaletteCard/PaletteVBox/MarginP/InnerVBox/ColorRow"]
+custom_minimum_size = Vector2(34, 26)
+layout_mode = 2
+tooltip_text = "Solid color picker"
+edit_alpha = false
+color = Color(0, 0, 0, 1)
+
+[node name="LblHex" type="Label" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PaletteCard/PaletteVBox/MarginP/InnerVBox/ColorRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "#000000"
+
+[node name="PaletteGrid" type="GridContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/PaletteCard/PaletteVBox/MarginP/InnerVBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
+columns = 8
+
+[node name="MeshCard" type="PanelContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="MeshVBox" type="VBoxContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/MeshCard"]
+layout_mode = 2
+
+[node name="MarginM" type="MarginContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/MeshCard/MeshVBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="InnerVBox" type="VBoxContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/MeshCard/MeshVBox/MarginM"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/MeshCard/MeshVBox/MarginM/InnerVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 1)
+theme_override_font_sizes/font_size = 11
+text = "MESH SETTINGS"
+
+[node name="SizeRow" type="HBoxContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/MeshCard/MeshVBox/MarginM/InnerVBox"]
+layout_mode = 2
+
+[node name="LblSize" type="Label" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/MeshCard/MeshVBox/MarginM/InnerVBox/SizeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "Voxel Size:"
+
+[node name="VoxelSizeSpin" type="SpinBox" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/MeshCard/MeshVBox/MarginM/InnerVBox/SizeRow"]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+min_value = 0.01
+max_value = 1.0
+step = 0.01
+value = 0.1
+
+[node name="TogglesGrid" type="GridContainer" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/MeshCard/MeshVBox/MarginM/InnerVBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 2
+columns = 2
+
+[node name="FaceShadingCheck" type="CheckBox" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/MeshCard/MeshVBox/MarginM/InnerVBox/TogglesGrid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+button_pressed = true
+text = "Face Shading"
+
+[node name="CullFacesCheck" type="CheckBox" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/MeshCard/MeshVBox/MarginM/InnerVBox/TogglesGrid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+button_pressed = true
+text = "Cull Faces"
+
+[node name="CenterXZCheck" type="CheckBox" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/MeshCard/MeshVBox/MarginM/InnerVBox/TogglesGrid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+button_pressed = true
+text = "Center XZ"
+
+[node name="GroundYCheck" type="CheckBox" parent="Margin/VBoxMain/BodySplit/RightScroll/RightVBox/MeshCard/MeshVBox/MarginM/InnerVBox/TogglesGrid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+button_pressed = true
+text = "Ground Y"
+
+
+
+[node name="FileDialogImport" type="FileDialog" parent="."]
+title = "Open Pixel Art Image"
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.png, *.jpg, *.jpeg, *.webp ; Supported Images")
+
+[node name="FileDialogSave" type="FileDialog" parent="."]
+title = "Save 3D Mesh"
+ok_button_text = "Save"
+file_mode = 4
+access = 2
+filters = PackedStringArray("*.tres, *.res ; Godot Mesh Resources", "*.glb ; Binary glTF 3D File")
+
+[node name="ProjectBrowserModal" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal_backdrop")
+
+[node name="Center" type="CenterContainer" parent="ProjectBrowserModal"]
+layout_mode = 2
+
+[node name="Card" type="PanelContainer" parent="ProjectBrowserModal/Center"]
+custom_minimum_size = Vector2(640, 480)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal_card")
+
+[node name="Margin" type="MarginContainer" parent="ProjectBrowserModal/Center/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="VBox" type="VBoxContainer" parent="ProjectBrowserModal/Center/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderHBox" type="HBoxContainer" parent="ProjectBrowserModal/Center/Card/Margin/VBox"]
+layout_mode = 2
+
+[node name="TitleVBox" type="VBoxContainer" parent="ProjectBrowserModal/Center/Card/Margin/VBox/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HeaderTitleHBox" type="HBoxContainer" parent="ProjectBrowserModal/Center/Card/Margin/VBox/HeaderHBox/TitleVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="ProjectBrowserModal/Center/Card/Margin/VBox/HeaderHBox/TitleVBox/HeaderTitleHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.93, 1, 1)
+theme_override_font_sizes/font_size = 15
+text = "My Models (Pixel 3D)"
+
+[node name="BadgeCount" type="Label" parent="ProjectBrowserModal/Center/Card/Margin/VBox/HeaderHBox/TitleVBox/HeaderTitleHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.38, 0.65, 1.0, 1)
+theme_override_font_sizes/font_size = 12
+text = "(0 saved)"
+
+[node name="Subtitle" type="Label" parent="ProjectBrowserModal/Center/Card/Margin/VBox/HeaderHBox/TitleVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.6, 0.7, 1)
+theme_override_font_sizes/font_size = 11
+text = "Files saved in res://assets/pixel_3d/source/"
+
+[node name="BtnCloseBrowser" type="Button" parent="ProjectBrowserModal/Center/Card/Margin/VBox/HeaderHBox"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+text = "✕"
+
+[node name="HSep1" type="HSeparator" parent="ProjectBrowserModal/Center/Card/Margin/VBox"]
+layout_mode = 2
+
+[node name="SearchEdit" type="LineEdit" parent="ProjectBrowserModal/Center/Card/Margin/VBox"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+placeholder_text = "🔍 Search model..."
+
+[node name="ListScroll" type="ScrollContainer" parent="ProjectBrowserModal/Center/Card/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ProjectItemList" type="ItemList" parent="ProjectBrowserModal/Center/Card/Margin/VBox/ListScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+select_mode = 1
+auto_height = true
+
+[node name="LblEmpty" type="Label" parent="ProjectBrowserModal/Center/Card/Margin/VBox"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.5, 0.55, 0.65, 1)
+theme_override_font_sizes/font_size = 12
+text = "No saved models found in res://assets/pixel_3d/source/.\nCreate a design and click 'Save'."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSep2" type="HSeparator" parent="ProjectBrowserModal/Center/Card/Margin/VBox"]
+layout_mode = 2
+
+[node name="FooterHBox" type="HBoxContainer" parent="ProjectBrowserModal/Center/Card/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnDeleteProject" type="Button" parent="ProjectBrowserModal/Center/Card/Margin/VBox/FooterHBox"]
+custom_minimum_size = Vector2(80, 32)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.4, 0.4, 1)
+text = "Delete"
+
+[node name="SpacerFoot" type="Control" parent="ProjectBrowserModal/Center/Card/Margin/VBox/FooterHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BtnCancelBrowser" type="Button" parent="ProjectBrowserModal/Center/Card/Margin/VBox/FooterHBox"]
+custom_minimum_size = Vector2(80, 32)
+layout_mode = 2
+text = "Close"
+
+[node name="BtnLoadConfirm" type="Button" parent="ProjectBrowserModal/Center/Card/Margin/VBox/FooterHBox"]
+custom_minimum_size = Vector2(120, 32)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_primary")
+text = "Load Model"
+
+[node name="UnsavedModal" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal_backdrop")
+
+[node name="Center" type="CenterContainer" parent="UnsavedModal"]
+layout_mode = 2
+
+[node name="Card" type="PanelContainer" parent="UnsavedModal/Center"]
+custom_minimum_size = Vector2(440, 180)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal_card")
+
+[node name="Margin" type="MarginContainer" parent="UnsavedModal/Center/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="UnsavedModal/Center/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="UnsavedModal/Center/Card/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.75, 0.3, 1)
+theme_override_font_sizes/font_size = 14
+text = "Save changes before continuing?"
+
+[node name="LblPrompt" type="Label" parent="UnsavedModal/Center/Card/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.8, 0.85, 0.95, 1)
+theme_override_font_sizes/font_size = 12
+text = "There are unsaved changes in the current model. If you continue without saving, they will be lost."
+autowrap_mode = 2
+
+[node name="ButtonsHBox" type="HBoxContainer" parent="UnsavedModal/Center/Card/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 2
+
+[node name="BtnDiscardChanges" type="Button" parent="UnsavedModal/Center/Card/Margin/VBox/ButtonsHBox"]
+custom_minimum_size = Vector2(100, 30)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.45, 0.45, 1)
+text = "Discard"
+
+[node name="BtnCancelUnsaved" type="Button" parent="UnsavedModal/Center/Card/Margin/VBox/ButtonsHBox"]
+custom_minimum_size = Vector2(80, 30)
+layout_mode = 2
+text = "Cancel"
+
+[node name="BtnSaveAndContinue" type="Button" parent="UnsavedModal/Center/Card/Margin/VBox/ButtonsHBox"]
+custom_minimum_size = Vector2(140, 30)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_primary")
+text = "Save & Continue"
+
+[node name="ExportModal" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal_backdrop")
+
+[node name="Center" type="CenterContainer" parent="ExportModal"]
+layout_mode = 2
+
+[node name="Card" type="PanelContainer" parent="ExportModal/Center"]
+custom_minimum_size = Vector2(420, 260)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal_card")
+
+[node name="Margin" type="MarginContainer" parent="ExportModal/Center/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="ExportModal/Center/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HeaderHBox" type="HBoxContainer" parent="ExportModal/Center/Card/Margin/VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="ExportModal/Center/Card/Margin/VBox/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "📦 Export Model"
+
+[node name="BtnCloseExportModal" type="Button" parent="ExportModal/Center/Card/Margin/VBox/HeaderHBox"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+text = "✕"
+
+[node name="LblPrompt" type="Label" parent="ExportModal/Center/Card/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.8, 1)
+theme_override_font_sizes/font_size = 12
+text = "Choose the format to export the current model:"
+
+[node name="OptionsVBox" type="VBoxContainer" parent="ExportModal/Center/Card/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnExportGlbModal" type="Button" parent="ExportModal/Center/Card/Margin/VBox/OptionsVBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "  📦 glTF Model (.glb) - Universal 3D format"
+alignment = 0
+
+[node name="BtnExportTresModal" type="Button" parent="ExportModal/Center/Card/Margin/VBox/OptionsVBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "  💾 Godot Mesh (.tres) - Native ArrayMesh resource"
+alignment = 0
+
+[node name="BtnExportPngModal" type="Button" parent="ExportModal/Center/Card/Margin/VBox/OptionsVBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "  🖼️ PNG Sprite (.png) - 2D transparent texture"
+alignment = 0
+
+[node name="BtnExportAllModal" type="Button" parent="ExportModal/Center/Card/Margin/VBox/OptionsVBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_primary")
+text = "  ⚡ Export All (.glb + .tres + .png)"
+alignment = 0
+
+[node name="HSep" type="HSeparator" parent="ExportModal/Center/Card/Margin/VBox"]
+layout_mode = 2
+
+[node name="FooterHBox" type="HBoxContainer" parent="ExportModal/Center/Card/Margin/VBox"]
+layout_mode = 2
+alignment = 2
+
+[node name="BtnCancelExportModal" type="Button" parent="ExportModal/Center/Card/Margin/VBox/FooterHBox"]
+custom_minimum_size = Vector2(90, 30)
+layout_mode = 2
+text = "Cancel"
