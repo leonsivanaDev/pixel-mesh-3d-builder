@@ -6,6 +6,8 @@ A Godot 4.x editor plugin for creating low-poly 3D voxel models, characters, and
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Support on Ko-fi](https://img.shields.io/badge/Support-Ko--fi-orange.svg)](https://ko-fi.com/leonsivana)
 
+![Pixel Mesh 3D Builder - Coin](screenshots/screenshot_1_coin.png)
+
 ---
 
 ## Features
