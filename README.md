@@ -4,7 +4,7 @@ A Godot 4.x editor plugin for creating low-poly 3D voxel models, characters, and
 
 ![Godot 4.x](https://img.shields.io/badge/Godot-4.x-blue.svg)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![Support on Ko-fi](https://img.shields.io/badge/Support-Ko--fi-orange.svg)](https://ko-fi.com/sivanadeveloper)
+[![Support on Ko-fi](https://img.shields.io/badge/Support-Ko--fi-orange.svg)](https://ko-fi.com/leonsivana)
 
 ---
 
@@ -42,7 +42,7 @@ If you find this plugin helpful for your Godot projects, you can support its con
 
 - ⭐ **Star this repository** on GitHub to help more developers discover it!
 - 🐛 **Report bugs & suggest features** via [GitHub Issues](https://github.com/leonsivanaDev/pixel-mesh-3d-builder/issues).
-- ☕ **Support the developer**: [Buy me a coffee on Ko-fi](https://ko-fi.com/sivanadeveloper) to support future updates and new features.
+- ☕ **Support the developer**: [Buy me a coffee on Ko-fi](https://ko-fi.com/leonsivana) to support future updates and new features.
 
 ---
 
