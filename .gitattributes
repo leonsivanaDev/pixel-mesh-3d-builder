@@ -1,0 +1,9 @@
+# Normalize EOL for text files
+* text=auto eol=lf
+
+# Exclude non-addon files from GitHub archive download for Godot Asset Library
+/.gitignore export-ignore
+/.gitattributes export-ignore
+/README.md export-ignore
+/LICENSE export-ignore
+/screenshots export-ignore

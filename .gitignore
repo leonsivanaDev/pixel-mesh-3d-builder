@@ -1,0 +1,7 @@
+# Godot-specific ignores
+.godot/
+*.import
+
+# OS generated
+.DS_Store
+Thumbs.db
